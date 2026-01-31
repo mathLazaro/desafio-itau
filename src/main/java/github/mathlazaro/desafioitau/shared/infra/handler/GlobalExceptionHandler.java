@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
     public void handleBadRequestExceptions(Exception e) {
-        logger.warn("Bad request error occurred");
+        logger.warn("Bad request error occurred: {}", e.getMessage());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
