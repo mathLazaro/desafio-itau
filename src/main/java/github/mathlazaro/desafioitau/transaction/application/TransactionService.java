@@ -25,8 +25,8 @@ public class TransactionService {
         repository.deleteAllTransactions();
     }
 
-    public TransactionStatisticsResponse getStatistics() {
-        List<Transaction> transactions = repository.getAllTransactionsAtLast(60);
+    public TransactionStatisticsResponse getStatistics(int lastSeconds) {
+        List<Transaction> transactions = repository.getAllTransactionsAtLast(lastSeconds);
         long size = transactions.size();
 
         if (size == 0) {

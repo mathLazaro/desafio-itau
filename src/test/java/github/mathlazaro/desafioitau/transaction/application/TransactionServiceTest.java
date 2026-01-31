@@ -48,10 +48,12 @@ class TransactionServiceTest {
     @Test
     @DisplayName("Should return empty statistics when no transactions in last 60 seconds")
     void validateStatisticsBlankList() {
-        when(repository.getAllTransactionsAtLast(60))
+        int seconds = 60;
+
+        when(repository.getAllTransactionsAtLast(seconds))
                 .thenReturn(List.of());
 
-        TransactionStatisticsResponse response = service.getStatistics();
+        TransactionStatisticsResponse response = service.getStatistics(seconds);
 
         assertEquals(0L, response.count());
         assertEquals(0.0, response.sum());
@@ -63,15 +65,17 @@ class TransactionServiceTest {
     @Test
     @DisplayName("Should return correct statistics for transactions in last 60 seconds")
     void validateStatistics() {
+        int seconds = 60;
         OffsetDateTime now = OffsetDateTime.now();
+
         Transaction t1 = new Transaction(10.0, now);
         Transaction t2 = new Transaction(20.0, now);
         Transaction t3 = new Transaction(30.0, now);
 
-        when(repository.getAllTransactionsAtLast(60))
+        when(repository.getAllTransactionsAtLast(seconds))
                 .thenReturn(List.of(t1, t2, t3));
 
-        TransactionStatisticsResponse response = service.getStatistics();
+        TransactionStatisticsResponse response = service.getStatistics(seconds);
 
         assertEquals(3, response.count());
         assertEquals(60.0, response.sum());
