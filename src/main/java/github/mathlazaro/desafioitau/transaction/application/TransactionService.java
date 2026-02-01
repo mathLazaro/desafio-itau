@@ -1,5 +1,6 @@
 package github.mathlazaro.desafioitau.transaction.application;
 
+import github.mathlazaro.desafioitau.shared.adapter.exception.ResourceNotFoundException;
 import github.mathlazaro.desafioitau.transaction.adapter.dto.TransactionStatisticsResponse;
 import github.mathlazaro.desafioitau.transaction.domain.model.Transaction;
 import github.mathlazaro.desafioitau.transaction.domain.repository.TransactionRepository;
@@ -16,9 +17,14 @@ public class TransactionService {
         this.repository = transactionRepository;
     }
 
-    public void createTransaction(Transaction transaction) {
+    public Transaction getTransactionById(Long id) {
+        return repository.getTransactionById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + id));
+    }
+
+    public Transaction createTransaction(Transaction transaction) {
         transaction.validate();
-        repository.saveTransaction(transaction);
+        return repository.saveTransaction(transaction);
     }
 
     public void deleteAllTransactions() {

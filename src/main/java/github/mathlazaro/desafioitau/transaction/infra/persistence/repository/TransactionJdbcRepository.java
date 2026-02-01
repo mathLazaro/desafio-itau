@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.data.relational.core.query.Criteria.where;
 import static org.springframework.data.relational.core.query.Query.query;
@@ -24,6 +25,12 @@ public class TransactionJdbcRepository implements TransactionRepository {
     public TransactionJdbcRepository(JdbcAggregateTemplate template, TransactionPersistenceMapper mapper) {
         this.mapper = mapper;
         this.template = template;
+    }
+
+    @Override
+    public Optional<Transaction> getTransactionById(Long id) {
+        return Optional.ofNullable(template.findById(id, TransactionEntity.class))
+                .map(mapper::toDomain);
     }
 
     @Override
@@ -44,9 +51,11 @@ public class TransactionJdbcRepository implements TransactionRepository {
     }
 
     @Override
-    public void saveTransaction(Transaction transactionToSave) {
+    public Transaction saveTransaction(Transaction transactionToSave) {
         TransactionEntity entity = mapper.toEntity(transactionToSave);
-        template.insert(entity);
+        return Optional.of(template.insert(entity))
+                .map(mapper::toDomain)
+                .orElseThrow();
     }
 
     @Override

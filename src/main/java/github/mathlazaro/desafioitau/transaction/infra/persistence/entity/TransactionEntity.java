@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 @Table("transactions")
 @Getter
@@ -20,7 +20,7 @@ public class TransactionEntity {
     @Column("amount")
     private Double amount;
 
-    @Column("date_time")
-    private OffsetDateTime dateTime;
+    @Column("occurred_at")
+    private Instant occurredAt;
 
 }

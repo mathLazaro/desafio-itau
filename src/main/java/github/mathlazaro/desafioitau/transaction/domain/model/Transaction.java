@@ -2,7 +2,6 @@ package github.mathlazaro.desafioitau.transaction.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
 
@@ -10,7 +9,6 @@ import static java.util.Objects.isNull;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public class Transaction {
 
     private Long id;

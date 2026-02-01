@@ -6,9 +6,16 @@ import github.mathlazaro.desafioitau.transaction.infra.persistence.registry.Tran
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 //@Repository
+@Deprecated
 public class TransactionRepositoryImpl implements TransactionRepository {
+
+    @Override
+    public Optional<Transaction> getTransactionById(Long id) {
+        throw new UnsupportedOperationException("Method not implemented");
+    }
 
     @Override
     public List<Transaction> getAllTransactions() {
@@ -24,8 +31,9 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     }
 
     @Override
-    public void saveTransaction(Transaction transactionToSave) {
+    public Transaction saveTransaction(Transaction transactionToSave) {
         TransactionRegistry.addTransaction(transactionToSave);
+        return transactionToSave;
     }
 
     @Override
