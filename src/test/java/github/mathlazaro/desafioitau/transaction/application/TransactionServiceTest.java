@@ -68,9 +68,9 @@ class TransactionServiceTest {
         int seconds = 60;
         OffsetDateTime now = OffsetDateTime.now();
 
-        Transaction t1 = new Transaction(10.0, now);
-        Transaction t2 = new Transaction(20.0, now);
-        Transaction t3 = new Transaction(30.0, now);
+        Transaction t1 = new Transaction(null, 10.0, now);
+        Transaction t2 = new Transaction(null, 20.0, now);
+        Transaction t3 = new Transaction(null, 30.0, now);
 
         when(repository.getAllTransactionsAtLast(seconds))
                 .thenReturn(List.of(t1, t2, t3));

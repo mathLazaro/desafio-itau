@@ -7,7 +7,8 @@ public class TransactionPresenter {
 
     public static Transaction toDomain(CreateTransactionRequest request) {
         return new Transaction(
-                request.value(),
+                null,
+                request.amount(),
                 request.dateTime()
         );
     }

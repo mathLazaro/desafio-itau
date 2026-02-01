@@ -3,12 +3,11 @@ package github.mathlazaro.desafioitau.transaction.infra.persistence.repository;
 import github.mathlazaro.desafioitau.transaction.domain.model.Transaction;
 import github.mathlazaro.desafioitau.transaction.domain.repository.TransactionRepository;
 import github.mathlazaro.desafioitau.transaction.infra.persistence.registry.TransactionRegistry;
-import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
-@Repository
+//@Repository
 public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
@@ -33,4 +32,5 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     public void deleteAllTransactions() {
         TransactionRegistry.clearTransactions();
     }
+
 }

@@ -10,8 +10,8 @@ import java.time.OffsetDateTime;
 public record CreateTransactionRequest(
         @NotNull
         @PositiveOrZero
-        @Schema(description = "Transaction value. Must be positive", example = "100.50")
-        Double value,
+        @Schema(description = "Transaction amount. Must be positive", example = "100.50")
+        Double amount,
 
         @NotNull
         @Past

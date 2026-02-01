@@ -13,20 +13,21 @@ import static java.util.Objects.isNull;
 @NoArgsConstructor
 public class Transaction {
 
-    private Double value;
+    private Long id;
+    private Double amount;
     private OffsetDateTime dateTime;
 
     public void validate() {
-        if (isNull(value) || isNull(dateTime)) {
-            throw new IllegalArgumentException("Transaction value and dateTime must not be null");
+        if (isNull(amount) || isNull(dateTime)) {
+            throw new IllegalArgumentException("Transaction amount and dateTime must not be null");
         }
 
         if (dateTime.isAfter(OffsetDateTime.now())) {
             throw new IllegalArgumentException("Transaction dateTime must not be in the future");
         }
 
-        if (value < 0) {
-            throw new IllegalArgumentException("Transaction value must not be negative");
+        if (amount < 0) {
+            throw new IllegalArgumentException("Transaction amount must not be negative");
         }
     }
 

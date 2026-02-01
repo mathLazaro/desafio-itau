@@ -38,7 +38,7 @@ public class TransactionService {
         double max = Double.MIN_VALUE;
 
         for (var transaction : transactions) {
-            double value = transaction.getValue();
+            double value = transaction.getAmount();
             sum += value;
             if (value < min) {
                 min = value;
