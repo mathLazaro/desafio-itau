@@ -14,8 +14,11 @@ public class TransactionService {
 
     private final TransactionRepository repository;
 
-    public TransactionService(TransactionRepository transactionRepository) {
+    private final Clock clock;
+
+    public TransactionService(TransactionRepository transactionRepository, Clock clock) {
         this.repository = transactionRepository;
+        this.clock = clock;
     }
 
     public Transaction getTransactionById(Long id) {
@@ -24,8 +27,7 @@ public class TransactionService {
     }
 
     public Transaction createTransaction(Transaction transaction) {
-        Clock clock = Clock.systemUTC();
-        transaction.validate(clock);
+        transaction.validate(clock.instant());
         return repository.saveTransaction(transaction);
     }
 

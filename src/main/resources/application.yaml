@@ -12,6 +12,11 @@ spring:
   sql:
     init:
       mode: always
+  jackson:
+    datatype:
+      datetime:
+        adjust-dates-to-context-time-zone: false
+        write-dates-as-timestamps: false
 logging:
   level:
     org:

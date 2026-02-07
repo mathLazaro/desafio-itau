@@ -23,4 +23,7 @@ public class TransactionEntity {
     @Column("occurred_at")
     private Instant occurredAt;
 
+    @Column("offset_occurred_at")
+    private String offsetOccurredAt;
+
 }

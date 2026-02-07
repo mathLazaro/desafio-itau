@@ -10,7 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,16 +28,27 @@ class TransactionServiceTest {
     private TransactionService service;
 
     @Mock
+    private Clock clock;
+
+    @Mock
     private TransactionRepository repository;
+
+    private static final Clock fixedClock = Clock.fixed(
+            Instant.parse("1979-11-30T12:00:00Z"),
+            ZoneOffset.UTC
+    );
 
 
     @Test
     @DisplayName("Should validate transaction before saving")
     void validateCreateTransaction() {
-        OffsetDateTime dateTime = OffsetDateTime.now().minusSeconds(50);
+        OffsetDateTime dateTime = OffsetDateTime.now(fixedClock).minusSeconds(50);
 
         Transaction transaction = new Transaction(null, 10.0, dateTime);
         Transaction transactionWithId = new Transaction(1L, 10.0, dateTime);
+
+        when(clock.instant())
+                .thenReturn(fixedClock.instant());
 
         when(repository.saveTransaction(transaction))
                 .thenReturn(transactionWithId);

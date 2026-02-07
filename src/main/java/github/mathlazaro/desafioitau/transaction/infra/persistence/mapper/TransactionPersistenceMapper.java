@@ -9,8 +9,12 @@ import org.mapstruct.Mapping;
 public interface TransactionPersistenceMapper {
 
     @Mapping(target = "occurredAt", expression = "java(transaction.getDateTime().toInstant())")
+    @Mapping(target = "offsetOccurredAt", expression = "java(transaction.getDateTime().getOffset().getId())")
     TransactionEntity toEntity(Transaction transaction);
 
-    @Mapping(target = "dateTime", expression = "java(transactionEntity.getOccurredAt().atOffset(java.time.ZoneOffset.UTC))")
+    @Mapping(
+            target = "dateTime",
+            expression = "java(OffsetDateTime.ofInstant(transactionEntity.getOccurredAt(), java.time.ZoneOffset.of(transactionEntity.getOffsetOccurredAt())))"
+    )
     Transaction toDomain(TransactionEntity transactionEntity);
 }
