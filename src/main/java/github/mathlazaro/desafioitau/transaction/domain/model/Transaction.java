@@ -3,6 +3,9 @@ package github.mathlazaro.desafioitau.transaction.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 
 import static java.util.Objects.isNull;
@@ -15,17 +18,23 @@ public class Transaction {
     private Double amount;
     private OffsetDateTime dateTime;
 
-    public void validate() {
+    public void validate(Clock clock) {
+        Instant now = clock.instant();
+
         if (isNull(amount) || isNull(dateTime)) {
-            throw new IllegalArgumentException("Transaction amount and dateTime must not be null");
+            throw new IllegalStateException("Transaction amount and dateTime must not be null");
         }
 
-        if (dateTime.isAfter(OffsetDateTime.now())) {
-            throw new IllegalArgumentException("Transaction dateTime must not be in the future");
+        if (dateTime.toInstant().isAfter(now)) {
+            throw new IllegalStateException("Transaction dateTime must not be in the future");
+        }
+
+        if (Duration.between(dateTime.toInstant(), now).getSeconds() > 60) {
+            throw new IllegalStateException("Transaction dateTime must be within the last 60 seconds");
         }
 
         if (amount < 0) {
-            throw new IllegalArgumentException("Transaction amount must not be negative");
+            throw new IllegalStateException("Transaction amount must not be negative");
         }
     }
 

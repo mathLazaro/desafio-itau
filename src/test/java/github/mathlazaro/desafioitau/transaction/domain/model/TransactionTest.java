@@ -3,41 +3,67 @@ package github.mathlazaro.desafioitau.transaction.domain.model;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TransactionTest {
 
+    private static final Instant now = Instant.now();
+
+    private static final Clock fixedClock = Clock.fixed(
+            now,
+            ZoneOffset.UTC
+    );
+
     @Test
     @DisplayName("Should not throw exception for valid transaction when amount is positive and dateTime is in the past")
     void validateSuccess() {
-        Transaction transaction = new Transaction(null, 100.0, OffsetDateTime.now().minusSeconds(10));
-        assertDoesNotThrow(transaction::validate);
+        Transaction transaction = new Transaction(null, 100.0, OffsetDateTime.now(fixedClock).minusSeconds(10));
+        assertDoesNotThrow(() -> transaction.validate(fixedClock));
     }
 
     @Test
-    @DisplayName("Should throw IllegalArgumentException when amount is null")
+    @DisplayName("Should throw IllegalStateException when amount is null")
     void validateNullValue() {
-        Transaction transaction = new Transaction(null, null, OffsetDateTime.now().minusSeconds(10));
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, transaction::validate);
+        Transaction transaction = new Transaction(null, null, OffsetDateTime.now(fixedClock).minusSeconds(10));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> transaction.validate(fixedClock));
         assertEquals("Transaction amount and dateTime must not be null", exception.getMessage());
     }
 
     @Test
-    @DisplayName("Should throw IllegalArgumentException when dateTime is null")
+    @DisplayName("Should throw IllegalStateException when amount is negative")
+    void validateNegativeValue() {
+        Transaction transaction = new Transaction(null, -10.0, OffsetDateTime.now(fixedClock).minusSeconds(10));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> transaction.validate(fixedClock));
+        assertEquals("Transaction amount must not be negative", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalStateException when dateTime is null")
     void validateNullDateTime() {
         Transaction transaction = new Transaction(null, 100.0, null);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, transaction::validate);
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> transaction.validate(fixedClock));
         assertEquals("Transaction amount and dateTime must not be null", exception.getMessage());
     }
 
     @Test
-    @DisplayName("Should throw IllegalArgumentException when dateTime is in the future")
+    @DisplayName("Should throw IllegalStateException when dateTime is in the future")
     void validateFutureDateTime() {
-        Transaction transaction = new Transaction(null , 100.0, OffsetDateTime.now().plusSeconds(10));
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, transaction::validate);
+        Transaction transaction = new Transaction(null, 100.0, OffsetDateTime.now(fixedClock).plusSeconds(10));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> transaction.validate(fixedClock));
         assertEquals("Transaction dateTime must not be in the future", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalStateException when transaction dateTime is older than 60 seconds")
+    void validateOldDateTime() {
+        Transaction transaction = new Transaction(null, 100.0, OffsetDateTime.now(fixedClock).minusSeconds(70));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> transaction.validate(fixedClock));
+        assertEquals("Transaction dateTime must be within the last 60 seconds", exception.getMessage());
     }
 
 }

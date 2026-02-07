@@ -14,7 +14,9 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionServiceTest {
@@ -29,12 +31,21 @@ class TransactionServiceTest {
     @Test
     @DisplayName("Should validate transaction before saving")
     void validateCreateTransaction() {
-        Transaction transaction = mock(Transaction.class);
+        OffsetDateTime dateTime = OffsetDateTime.now().minusSeconds(50);
 
-        service.createTransaction(transaction);
+        Transaction transaction = new Transaction(null, 10.0, dateTime);
+        Transaction transactionWithId = new Transaction(1L, 10.0, dateTime);
 
-        verify(transaction).validate();
-        verify(repository).saveTransaction(transaction);
+        when(repository.saveTransaction(transaction))
+                .thenReturn(transactionWithId);
+
+        Transaction created = service.createTransaction(transaction);
+
+        assertNotNull(created);
+        assertEquals(transactionWithId.getId(), created.getId());
+        assertEquals(transaction.getAmount(), created.getAmount());
+        assertEquals(transaction.getDateTime(), created.getDateTime());
+
     }
 
     @Test

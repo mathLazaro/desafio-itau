@@ -6,6 +6,7 @@ import github.mathlazaro.desafioitau.transaction.domain.model.Transaction;
 import github.mathlazaro.desafioitau.transaction.domain.repository.TransactionRepository;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
 import java.util.List;
 
 @Component
@@ -23,7 +24,8 @@ public class TransactionService {
     }
 
     public Transaction createTransaction(Transaction transaction) {
-        transaction.validate();
+        Clock clock = Clock.systemUTC();
+        transaction.validate(clock);
         return repository.saveTransaction(transaction);
     }
 

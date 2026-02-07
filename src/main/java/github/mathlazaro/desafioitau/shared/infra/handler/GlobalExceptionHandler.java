@@ -62,6 +62,17 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
+    public StandardResponse handleBadRequestExceptions(IllegalStateException e) {
+        logger.warn("Illegal state error occurred: {}", e.getMessage());
+        return new StandardResponse(
+                e.getMessage(),
+                null,
+                null
+        );
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public StandardResponse handleResourceNotFoundException(ResourceNotFoundException e) {
